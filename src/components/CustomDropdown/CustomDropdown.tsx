@@ -1,12 +1,6 @@
-import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  type ReactNode,
-} from "react";
-import { useDebouncedValue } from "../../hooks/useDebouncedValue";
+import { type ReactNode } from "react";
 import type { DropdownOption } from "../../types/types";
+import { useDropdownLogic } from "../../hooks/useDropdownLogic";
 
 type DropdownProps<T> = {
   value?: T;
@@ -31,65 +25,36 @@ export function CustomDropdown<T>({
   searchFunction,
   enableDebounce = false,
 }: DropdownProps<T>) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const debouncedQuery = useDebouncedValue(query, 300);
-  const [filteredOptions, setFilteredOptions] =
-    useState<DropdownOption<T>[]>(options);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const {
+    containerRef,
+    selected,
+    isOpen,
+    setIsOpen,
+    query,
+    setQuery,
+    filteredOptions,
+  } = useDropdownLogic({
+    value,
+    options,
+    searchFunction,
+    enableDebounce,
+  });
 
-  const selected = options.find((o) => o.value === value);
-
-  const closeDropdown = useCallback(() => setIsOpen(false), []);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) closeDropdown();
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [closeDropdown]);
-
-  useEffect(() => {
-    const effectiveQuery = enableDebounce ? debouncedQuery : query;
-
-    const runSearch = async () => {
-      if (searchFunction) {
-        const result = await searchFunction(effectiveQuery);
-        setFilteredOptions(result);
-      } else {
-        setFilteredOptions(
-          options.filter((o) =>
-            o.label.toLowerCase().includes(effectiveQuery.toLowerCase()),
-          ),
-        );
-      }
-    };
-
-    runSearch();
-  }, [debouncedQuery, query, options, searchFunction, enableDebounce]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+  const handleBlur = () => {
+    setTimeout(() => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(document.activeElement)
+      ) {
         setIsOpen(false);
       }
-    };
+    }, 0);
+  };
 
-    if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setQuery("");
-    }
-  }, [isOpen]);
+  const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <div
@@ -97,22 +62,10 @@ export function CustomDropdown<T>({
       ref={containerRef}
       tabIndex={0}
       onFocus={() => setIsOpen(true)}
-      onBlur={() => {
-        setTimeout(() => {
-          if (
-            containerRef.current &&
-            !containerRef.current.contains(document.activeElement)
-          ) {
-            setIsOpen(false);
-          }
-        }, 0);
-      }}
+      onBlur={handleBlur}
     >
       <button
-        onMouseDown={(e) => {
-          e.preventDefault();
-          setIsOpen((prev) => !prev);
-        }}
+        onMouseDown={handleMouseDown}
         className="w-full text-left px-4 py-2 bg-gray-100 rounded border border-gray-300 hover:bg-gray-200"
       >
         {selected ? renderSelected?.(selected) || selected.label : placeholder}

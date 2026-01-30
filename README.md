@@ -1,73 +1,71 @@
-# React + TypeScript + Vite
+# Custom Dropdown Component
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[LIVE DEMO](https://zagroza-test-two.vercel.app/)
 
-Currently, two official plugins are available:
+**Custom Dropdown Component** is a custom Dropdown component implementation according to the test task.
+Built with React, TypeScript, and TailwindCSS, without using any third-party select libraries.
+This component supports the render props pattern via renderOption and renderSelected for flexible UI customization.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Key dropdown component props
+- **renderOption** – lets you customize how each dropdown option is displayed in the list.
+- **renderSelected** – defines how the selected value is shown inside the closed dropdown.
+- **searchFunction** – allows you to implement custom or async search logic instead of default filtering.
+- **enableDebounce** – enables debounce time before calling searchFunction (useful for API calls).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Dropdown opens on click or focus (Tab key)
+- Closes on:
+  - repeated click;
+  - losing focus;
+  - clicking outside the dropdown;
+  - pressing the Escape key.
+- Built-in search with support for:
+  - custom search logic;
+  - asynchronous data fetching;
+  - optional debounce behavior.
+- Search input is cleared on dropdown close
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Vite** – Lightning-fast development server and build tool.
+- **React** – Component-based UI framework.
+- **TailwindCSS** – A utility-first CSS framework that provides low-level utility classes to build custom designs without having to write custom CSS.
+- **TypeScript** – Strong typing across the app.
+
+---
+
+## 📦 Getting Started
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/dyarechuk/zagroza_test.git
+cd meme-web
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+### 3. Run the app
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 👨‍💻 Author
+
+This project was created by [Dmytro Yarechuk](https://github.com/Dyarechuk).
