@@ -47,7 +47,7 @@ This component supports the render props pattern via renderOption and renderSele
 
 ```bash
 git clone https://github.com/dyarechuk/zagroza_test.git
-cd meme-web
+cd zagroza_test
 ```
 
 ### 2. Install dependencies
